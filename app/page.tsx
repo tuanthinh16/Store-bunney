@@ -6,6 +6,7 @@ import CarouselComponent from '@/components/UI/app.carousel';
 import React from 'react';
 import axios from 'axios';
 import ProductItem from '@/components/ITEM/item.Product';
+import Loading from './loading';
 
 export default function Home() {
   const [product,setProduct] = React.useState<any[]>([]);
@@ -34,7 +35,7 @@ export default function Home() {
       <h2>Product</h2>
         <div style={{display:'flex',flexWrap:'wrap'}}>
           
-          <ProductItem product={product}/>
+          <ProductItem product={product} fallback={<Loading/>}/>
         </div>
       </div>
     </Container>

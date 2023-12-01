@@ -3,11 +3,12 @@ import ProductItem from '@/components/ITEM/item.Product';
 import axios from 'axios';
 import React from 'react'
 import { Container } from 'react-bootstrap'
+import Loading from './loading';
 
 const Product = () => {
     const [product,setProduct] = React.useState<any[]>([]);
     React.useEffect(()=>{
-        document.title = "Bunney | Home";
+        document.title = "Bunney | Product";
         fetchData();
     },[]);
     const fetchData =()=>{
@@ -24,7 +25,7 @@ const Product = () => {
         <Container>
             <h1>All Products</h1>
             <div style={{display:'flex',flexWrap:'wrap'}}>
-            <ProductItem product={product}/>
+            <ProductItem product={product} fallback={<Loading/>}/>
             </div>
         </Container>
     )
