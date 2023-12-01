@@ -1,0 +1,37 @@
+
+{
+    "items": {
+        "bootstrap": [
+        {
+            "id": 1,
+            "title": "Photography",
+            "body": "Bootstrap Carousel Example",
+            "imageUrl": "https://res.cloudinary.com/dwweabf16/image/upload/v1701430147/pexels-tram-tran-7885335_tmpxwb.jpg",
+            "docs": "https://getbootstrap.com/docs/4.0/components/carousel/"
+        },
+        {
+            "id": 2,
+            "title": "City Views",
+            "body": "Bootstrap Carousel Example",
+            "imageUrl": "https://res.cloudinary.com/dwweabf16/image/upload/v1701430149/pexels-matteus-silva-13742840_sc1ujx.jpg",
+            "docs": "https://getbootstrap.com/docs/4.0/components/carousel/"
+        },
+        {
+            "id": 3,
+            "title": "Wild Life",
+            "body": "Bootstrap Carousel Example",
+            "imageUrl": "https://res.cloudinary.com/dwweabf16/image/upload/v1701430211/pexels-alessio-cesario-1906839_lkktvo.jpg",
+            "docs": "https://getbootstrap.com/docs/4.0/components/carousel/"
+        },
+        {
+            "id": 4,
+            "title": "Foods and Culture",
+            "body": "Bootstrap Carousel Example",
+            "imageUrl": "https://res.cloudinary.com/dwweabf16/image/upload/v1701430212/pexels-tu-nguyen-19153538_hbc1ce.jpg",
+            "docs": "https://getbootstrap.com/docs/4.0/components/carousel/"
+        }
+        ]
+    }
+    }
+    
+  
