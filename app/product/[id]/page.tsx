@@ -23,11 +23,11 @@ const ProductDetail = ({params}:{params:{id:string}}) => {
         fetchData(); 
         document.title = "Bunney | Product";
     },[])
-    const [size,setStize] = React.useState(true);
+    const [size,setSize] = React.useState(true);
     const [mobile,setMobile] = React.useState(false);
     React.useEffect(() => {
         const handleResize = () => {
-            setStize(window.innerWidth > 1000);
+            setSize(window.innerWidth > 1000);
             setMobile(window.innerWidth < 400);
             
         };

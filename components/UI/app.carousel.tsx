@@ -3,6 +3,7 @@ import { SetStateAction, useState } from "react";
 import { items } from "../item.json";
 import { Carousel } from "react-bootstrap";
 import React from "react";
+import Image from "next/image";
 export default function BootstrapCarousel() {
     const { bootstrap } = items;
     const [index, setIndex] = useState(0);
@@ -30,7 +31,7 @@ export default function BootstrapCarousel() {
             <Carousel activeIndex={index} onSelect={handleSelect} style={{maxWidth:'100vw',maxHeight:'400px'}}>
             {bootstrap.map((item) => (
                 <Carousel.Item key={item.id}  interval={4000}>
-                <img src={item.imageUrl} alt="slides" width='100%' height={400}/>
+                <Image src={item.imageUrl} alt="slides"  height={400}/>
                 <Carousel.Caption >
                     <h3>{item.title}</h3>
                     <p>{item.body}</p>

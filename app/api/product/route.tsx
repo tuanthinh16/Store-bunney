@@ -68,7 +68,6 @@ export async function POST(request:NextRequest) {
                 "title":product.get('title'),
                 "description": product.get('description'),
                 "category": product.get('category'),
-                "image": product.get('image'),
                 "price": product.get('price'),
                 "rating":product.get('rating')
             }
