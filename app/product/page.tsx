@@ -1,9 +1,8 @@
 'use client'
 import ProductItem from '@/components/ITEM/item.Product';
+import { Container } from '@mui/material';
 import axios from 'axios';
 import React from 'react'
-import { Container } from 'react-bootstrap'
-import Loading from './loading';
 
 const Product = () => {
     const [product,setProduct] = React.useState<any[]>([]);
@@ -25,7 +24,7 @@ const Product = () => {
         <Container>
             <h1>All Products</h1>
             <div style={{display:'flex',flexWrap:'wrap'}}>
-            <ProductItem product={product} fallback={<Loading/>}/>
+            <ProductItem product={product} />
             </div>
         </Container>
     )
