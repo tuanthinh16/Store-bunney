@@ -11,18 +11,6 @@ const ListProduct = ({product}:any) => {
     const onClickAdd =()=>{
         setShowadd(true);
     }
-    const [image,setImage] = useState([]);
-    const getImageUrl = (_id: any)=>{
-
-        const url="/api/product/get-image?idsp=" + _id;
-        axios.get(url)
-        .then(response =>{
-            setImage(response.data['imageUrl'])
-        })
-        .catch(error=>{
-            console.error("Err: "+error)
-        });
-    };
     return (
         <Container>
             <div style={{display:'flex',position:'relative'}}>
@@ -46,19 +34,17 @@ const ListProduct = ({product}:any) => {
                         </tr>
                     </thead>
                     <tbody>
-                    {product?.map((row:any,index:number)=>(
+                    {product?.map(async (row:any,index:number)=>(
                         <tr key={index}>
                             <td>{count++}</td>
                             <td style={{color:'green',fontSize:'small'}}>{row['_id']}</td>
                             <td>{row['title']}</td>
                             <td>{row['category']}</td>
                             <td style={{maxHeight:'100px',overflowY:'auto'}}>{row['description']}</td>
-                            <td>
-                                {image[index] ? (
-                                    <Link href={image[index]}>{image[index]}</Link>
-                                ) : (
-                                    <span>No Image</span>
-                                )}
+                            <td style={{}}>
+                                {row['imageUrl']?.map((imageUrl:string,index:number)=>(
+                                    <Link href={imageUrl} style={{textDecoration:'none',marginLeft:5}} key={index}>{'Image'}{index}</Link>
+                                ))}
                             </td>
                             <td>{row['price']}</td>
                             <td>{row['rating']?.['rate']}</td>
@@ -91,11 +77,10 @@ export default ListProduct;
 
 const AddProduct = ()=>{
     const [selectedFiles, setSelectedFiles] = useState([]);
-
-
     const [cate,setCate] = React.useState<any[]>([]);
     React.useEffect(()=>{
         fetchData();
+        
     },[]);
     const fetchData =()=>{
         const url="/api/category";
@@ -107,66 +92,10 @@ const AddProduct = ()=>{
             console.error("Err: "+error)
         });
     } ;
-    const handleFileChange = (event:any) => {
+    const handleFileChange = async (event:any) => {
         const files = event.target.files;
-        setSelectedFiles(files);
-    };
-    const [fileName,setFileName] = useState <string[]>([]);
-    const [product,setProduct] = useState({title:'',description:'',category:'',price:'',rating:{rate:5,count:1}});
-    const onValueChange =(_key:any)=>(e:any)=>{
-        setProduct((prev)=>({...prev,[_key]:e.target.value}));
-    }
-    const onAdd = async () => {
-        const Fdata = new FormData();
-        Fdata.append('title',product.title);
-        Fdata.append('description',product.description);
-        Fdata.append('price',product.price);
-        Fdata.append('cate',product.category);
-
-        const url="/api/product";
-        axios({
-            method:"post",
-            url: url,
-            data:Fdata,
-            headers: { "Content-Type": "multipart/form-data" },
-        })
-        .then(response =>{
-            if(response.status===200){
-                if(selectedFiles.length == fileName.length){
-                    const data = new FormData();
-                    data.append('idsp',response['data']['insertedId'])
-                    fileName.forEach((file,index) =>{
-                        data.append(`file${index}`,file);
-                    })
-
-                    const url="/api/product/add-image";
-                    axios({
-                        method:"post",
-                        url: url,
-                        data:data,
-                        headers: { "Content-Type": "multipart/form-data" },
-                    })
-                    .then(response =>{
-                        if(response.status===200){
-                            console.log(response.data);
-                        }
-                    })
-                    .catch(error=>{
-                        console.error("Err: "+error)
-                    });  
-                }
-
-            }
-        })
-        .catch(error=>{
-            console.error("Err: "+error)
-        });  
-        if (!selectedFiles || selectedFiles.length === 0) {
-            console.error('No files selected.');
-            return;
-        }
-        
-        Array.from(selectedFiles).forEach(async (file) => {
+        for(let i =0; i<files.length; i++) {
+            const file = files[i];
             try {
                 await makeUploadRequest({
                 file,
@@ -178,6 +107,7 @@ const AddProduct = ()=>{
                     console.log("add file success")
                     const fileUrls: string[] = Array.isArray(res.url) ? res.url : [res.url];
                     setFileName((prevFileNames) => [...prevFileNames, ...fileUrls]);
+                    //
                 },
                 errorCallback: (error) => {
                   // Handle error if needed
@@ -187,8 +117,43 @@ const AddProduct = ()=>{
             } catch (error) {
                 console.error('Error uploading file:', error);
             }
-        });
-        
+        }
+        if(selectedFiles.length == fileName.length){
+            setUploaded(true);
+        }
+    };
+    const [fileName,setFileName] = useState <string[]>([]);
+    const [product,setProduct] = useState({title:'',description:'',category:'',price:'',rating:{rate:5,count:1}});
+    const onValueChange =(_key:any)=>(e:any)=>{
+        setProduct((prev)=>({...prev,[_key]:e.target.value}));
+    }
+    const [uploaded,setUploaded] = useState(false);
+
+    const onAdd = async () => {
+            const Fdata = new FormData();
+            Fdata.append('title',product.title);
+            Fdata.append('description',product.description);
+            Fdata.append('price',product.price);
+            Fdata.append('cate',product.category);
+            Fdata.append('imageUrl',JSON.stringify(fileName));
+            Fdata.append('rating',JSON.stringify(product.rating))
+            
+            console.log('image: ',JSON.stringify(fileName));
+            const url="/api/product";
+            axios({
+                method:"post",
+                url: url,
+                data:Fdata,
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+            .then(response =>{
+                if(response.status===200){
+                    console.log("add thanh cong",response.data);
+                }
+            })
+            .catch(error=>{
+                console.error("Err: "+error)
+            }); 
     };
     
     const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -237,7 +202,11 @@ const AddProduct = ()=>{
                 <Form.Control type="text" required onChange={onValueChange('price')}/>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1" style={{alignContent:'center'}}>
-                <Button variant='success' style={{width:'30%',margin:'auto'}} onClick={onAdd}>ADD</Button>
+                {uploaded?(
+                    <Button variant='success' style={{width:'30%',margin:'auto'}} onClick={onAdd}>ADD</Button>
+                ):(
+                    <Button variant='success' style={{width:'30%',margin:'auto'}} onClick={onAdd} disabled>ADD</Button>
+                )}
             </Form.Group>
             </Form>
         </Container>

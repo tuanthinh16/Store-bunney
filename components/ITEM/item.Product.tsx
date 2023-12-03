@@ -9,7 +9,7 @@ const ProductItem = ({product}:any) => {
         <>
             {product?.map((item:any,index:number)=>(
                 <Card style={{ width: '20rem' ,padding:'2rem',borderRadius:'20px',marginRight:'2rem'}} key={index} onClick={()=>route.push("/product/"+item['_id'])}>
-                <Card.Img variant="top" src={''} style={{maxHeight:'300px'}}/>
+                <Card.Img variant="top"src={item && item.imageUrl && item.imageUrl[0] ? item.imageUrl[0] : 'fallback_image_url'} style={{maxHeight:'300px'}}/>
                 <Card.Body>
                     <Card.Text style={{color:'green'}}>
                         {item['category']}

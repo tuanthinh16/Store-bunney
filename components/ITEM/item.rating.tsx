@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Container } from 'react-bootstrap';
 
 const StarRating = ({ initialRating, onChange }:any) => {
     const [rating, setRating] = useState(initialRating || 0);
@@ -9,7 +10,7 @@ const StarRating = ({ initialRating, onChange }:any) => {
     };
 
     return (
-        <div>
+        <Container>
         {[1, 2, 3, 4, 5].map((star) => (
             <span
             key={star}
@@ -32,7 +33,7 @@ const StarRating = ({ initialRating, onChange }:any) => {
                 : '\u2606'} {/* Empty star */}
             </span>
         ))}
-        </div>
+        </Container>
     );
 };
 

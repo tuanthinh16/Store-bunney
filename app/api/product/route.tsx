@@ -59,30 +59,36 @@ export async function GET(request: Request,response: Response){
 }
 export async function POST(request:NextRequest) {
     const product = await request.formData();
-    try {
-        const _data = {
-            "collection": "Products",
-            "database": "FirstApi",
-            "dataSource": "RustData",
-            "document": {
-                "title":product.get('title'),
-                "description": product.get('description'),
-                "category": product.get('category'),
-                "price": product.get('price'),
-                "rating":product.get('rating')
+    const ratingData = (product.get('rating'));
+    const imageUrl = (product.get('imageUrl'));
+    if (ratingData != null && imageUrl != null) {
+        try {
+            const _data = {
+                "collection": "Products",
+                "database": "FirstApi",
+                "dataSource": "RustData",
+                "document": {
+                    "title":product.get('title'),
+                    "description": product.get('description'),
+                    "category": product.get('category'),
+                    "price": product.get('price'),
+                    "imageUrl": JSON.parse(imageUrl.toString()),
+                    "rating":JSON.parse(ratingData.toString())
+                }
+            };
+            
+            const userData = await fetchData('https://ap-southeast-1.aws.data.mongodb-api.com/app/data-sdyzv/endpoint/data/v1/action/insertOne', 'post', _data);
+            if(userData){
+                return NextResponse.json({data:userData},{status:200})
+            }else{
+                return NextResponse.json({err:"Error when insert product"},{status:200})
             }
-        };
-        
-        const userData = await fetchData('https://ap-southeast-1.aws.data.mongodb-api.com/app/data-sdyzv/endpoint/data/v1/action/insertOne', 'post', _data);
-        if(userData){
-            return NextResponse.json({data:userData},{status:200})
-        }else{
-            return NextResponse.json({err:"Error when insert product"},{status:200})
+        } catch (error) {
+            console.error('Error insert product :', error);
+            return NextResponse.json({err:error},{status:200})
         }
-    } catch (error) {
-        console.error('Error insert product :', error);
-        return NextResponse.json({err:error},{status:200})
     }
+    
 }
 export async function PUT(request:NextRequest){
     const product = await request.formData();

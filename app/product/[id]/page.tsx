@@ -73,7 +73,9 @@ const ItemProductDetail = ({product}:any)=>{
                 <div key={index} style={{display:'flex',border:'1px solid black',borderRadius:'20px',padding:'3rem',position:'relative'}}>
                     <div style={{maxWidth:'40%'}}>
                         <Card.Img variant="left" src={image} width={400} height={300}/>
-                        <Card.Img variant="right" src={item['image']} onClick={()=> setImage(item['image'])} width={100} height={100}/>
+                        {item['imageUrl']?.map((_image: any, index:number)=>(
+                            <Card.Img variant="right" src={_image} onClick={()=> setImage(_image)} width={100} height={100} key={index}/>
+                        ))}
                     </div>
                     
                     <div style={{marginLeft:'3rem'}}>
@@ -198,7 +200,7 @@ const QuantitySelector = ({ onChange }:any) => {
     };
 
     return (
-        <div className="quantity-selector" style={{display:'flex',maxWidth:'50%'}}>
+        <div className="quantity-selector" style={{display:'flex',maxWidth:'90%'}}>
         <label htmlFor="quantity" style={{paddingTop:5,marginRight:5,fontWeight:'bold'}}>Quantity:</label>
         <select
             id="quantity"
