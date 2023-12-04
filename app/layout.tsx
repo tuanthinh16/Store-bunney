@@ -20,11 +20,10 @@ export default function RootLayout({children}:LayoutProps) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header/>
-        <div style={{marginTop:'7rem',marginLeft:'3rem'}}>
+        <div>
           {children}
         </div>
-          <Footer/>
+          
       </body>
     </html>
   )

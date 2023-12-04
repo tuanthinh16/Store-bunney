@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react'
 import { Button, Container, FloatingLabel, Form, Modal, Table } from 'react-bootstrap'
 import { makeUploadRequest } from './uploadImage';
+import Spinner from 'react-bootstrap/Spinner';
 
 const ListProduct = ({product}:any) => {
     const [showadd,setShowadd] = useState(false);
@@ -205,7 +206,7 @@ const AddProduct = ()=>{
                 {uploaded?(
                     <Button variant='success' style={{width:'30%',margin:'auto'}} onClick={onAdd}>ADD</Button>
                 ):(
-                    <Button variant='success' style={{width:'30%',margin:'auto'}} onClick={onAdd} disabled>ADD</Button>
+                    <Spinner animation="border" variant="warning" />
                 )}
             </Form.Group>
             </Form>

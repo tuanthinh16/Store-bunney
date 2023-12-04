@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { Badge, Button, Col, Container, Dropdown, Form, InputGroup, Row } from 'react-bootstrap'
 import logo from '../../public/logo.png';
 import styled from 'styled-components';
@@ -9,14 +9,17 @@ import Person3OutlinedIcon from '@mui/icons-material/Person3Outlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useRouter } from 'next/navigation';
+import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
+import { JwtPayload, jwtDecode } from "jwt-decode";
 
-const Header = () => {
+const Header = async () => {
+
     const route = useRouter();
-    const [size,setStize] = React.useState(true);
+    const [size,setSize] = React.useState(true);
     const [mobile,setMobile] = React.useState(false);
     React.useEffect(() => {
         const handleResize = () => {
-            setStize(window.innerWidth > 1000);
+            setSize(window.innerWidth > 1000);
             setMobile(window.innerWidth < 400);
             
         };
@@ -27,8 +30,15 @@ const Header = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+    
+    const handleLogout = ()=>{
+        deleteCookie('token');
+        route.refresh();
+    }
+    const token = getCookie('token');
+    const decode = token ? jwtDecode(token) : null;
     return (
-        <Container fluid="xxl" style={{backgroundColor:'rgba(78, 73, 73, 0.247)',marginLeft:0,position:'fixed',zIndex:1,maxWidth:'100%'}}>
+        <Container fluid="xxl" style={{backgroundColor:'rgba(78, 73, 73, 0.247)',marginLeft:0,position:'fixed',zIndex:1,maxWidth:'100%',top:0}}>
             <Row style={{width:'100%',display:'flex',paddingTop:'1rem'}}>
                 <Col style={{display:'flex',maxWidth:'85%'}}>
                     {mobile?(
@@ -82,6 +92,11 @@ const Header = () => {
                     </Col>
                 )}
                 <Col style={{right:'1px',position:'relative',display:'flex',margin:'auto',justifyContent:'right'}}>
+                    {token&&(
+                        <div style={{marginRight:'2rem',paddingTop:'0.5rem'}}>
+                            <h4 style={{color:'green'}}>HI {decode? decode['username']:''}</h4>
+                        </div>
+                    )}
                     {!mobile&&(
                         <div style={{marginRight:'1rem'}}>
                             <Button variant='outline-primary' style={{borderRadius:'10px'}}>
@@ -90,29 +105,18 @@ const Header = () => {
                             </Button>
                         </div>
                     )}
-                    {mobile?(
-                        <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic" style={{borderRadius:'10px',paddingBottom:'0.3rem'}}>
+                    <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic" style={{borderRadius:'10px'}}>
                             <Person3OutlinedIcon/>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">Setting</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Profile</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Logout</Dropdown.Item>
+                            {token?(
+                                <Dropdown.Item  onClick={handleLogout}>Logout</Dropdown.Item>
+                            ):(
+                                <Dropdown.Item  href="/user/login">Login</Dropdown.Item>
+                            )}
                         </Dropdown.Menu>
                     </Dropdown>
-                    ):(
-                        <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-basic" style={{borderRadius:'10px'}}>
-                                <Person3OutlinedIcon/>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Setting</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">Profile</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Logout</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    )}
                 </Col>
             </Row>
         </Container>
@@ -120,18 +124,3 @@ const Header = () => {
 }
 
 export default Header;
-const MyButton = styled.button`
-  /* Thêm các thuộc tính CSS mong muốn cho button */
-    background-color: rgba(78, 73, 73, 0.247);
-    color: #fff;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
-    /* Hover effect */
-    &:hover {
-        background-color: #2980b9;
-    }
-`;
