@@ -10,8 +10,6 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useRouter } from 'next/navigation';
 import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
-import { JwtPayload, jwtDecode } from "jwt-decode";
-
 const Header = async () => {
 
     const route = useRouter();
@@ -36,7 +34,6 @@ const Header = async () => {
         route.refresh();
     }
     const token = getCookie('token');
-    const decode = token ? jwtDecode(token) : null;
     return (
         <Container fluid="xxl" style={{backgroundColor:'rgba(78, 73, 73, 0.247)',marginLeft:0,position:'fixed',zIndex:1,maxWidth:'100%',top:0}}>
             <Row style={{width:'100%',display:'flex',paddingTop:'1rem'}}>
@@ -92,11 +89,7 @@ const Header = async () => {
                     </Col>
                 )}
                 <Col style={{right:'1px',position:'relative',display:'flex',margin:'auto',justifyContent:'right'}}>
-                    {token&&(
-                        <div style={{marginRight:'2rem',paddingTop:'0.5rem'}}>
-                            <h4 style={{color:'green'}}>HI {decode? decode['username']:''}</h4>
-                        </div>
-                    )}
+                    
                     {!mobile&&(
                         <div style={{marginRight:'1rem'}}>
                             <Button variant='outline-primary' style={{borderRadius:'10px'}}>
