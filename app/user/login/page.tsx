@@ -34,7 +34,7 @@ const LoginFrom = ()=>{
         .then(response =>{
             if(response.status===200){
                 console.log('login thanh cong, token',response.data)
-                if(response.data.username === 'admin'){
+                if(response.data.data.username === 'admin'){
                     route.replace('/adminpage')
                 }
                 else{
